@@ -1,0 +1,152 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// 1
+
+public class TaskManager {
+    public static void main(String[] args) {
+        List<String> tasks = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("""
+                    Меню:
+                    1 - добавить задачу
+                    2 - удалить первую задачу
+                    3 - удалить задачу по номеру
+                    4 - показать все задачи
+                    5 - выход""");
+            System.out.print("Введите команду: ");
+
+            String line = scanner.nextLine().trim();
+
+            if (line.equals("1")) {
+                System.out.print("Введите текст задачи: ");
+                String task = scanner.nextLine().trim();
+                tasks.add(task);
+                System.out.println("Задача добавлена.");
+            } else if (line.equals("2")) {
+                if (tasks.isEmpty()) {
+                    System.out.println("Список пуст");
+                } else {
+                    System.out.println("Удалена задача: " + tasks.remove(0));
+                }
+            } else if (line.equals("3")) {
+                if (tasks.isEmpty()) {
+                    System.out.println("Список пуст");
+                    continue;
+                }
+                System.out.print("Введите номер задачи: ");
+                try {
+                    int number = Integer.parseInt(scanner.nextLine().trim());
+                    if (number < 1 || number > tasks.size()) {
+                        System.out.println("Неверный номер");
+                    } else {
+                        System.out.println("Удалена задача: " + tasks.remove(number - 1));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Неверный номер");
+                }
+            } else if (line.equals("4")) {
+                if (tasks.isEmpty()) {
+                    System.out.println("Список пуст");
+                } else {
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + ". " + tasks.get(i));
+                    }
+                }
+            } else if (line.equals("5")) {
+                System.out.println("Программа завершена.");
+                return;
+            } else {
+                System.out.println("Неверная команда");
+            }
+        }
+    }
+}
+
+// 2
+
+public static List<List<String>> group(List<String> words) {
+    Map<String, List<String>> map = new HashMap<>();
+    List<String> order = new ArrayList<>();
+
+    //for each
+    for (String w : words) {
+        char[] c = w.toCharArray();
+        Arrays.sort(c);
+        String key = new String(c);
+
+        if (!map.containsKey(key)) {
+            map.put(key, new ArrayList<>());
+            order.add(key);
+        }
+        map.get(key).add(w);
+    }
+
+    List<List<String>> result = new ArrayList<>();
+    for (String key : order) {
+        result.add(map.get(key));
+    }
+    return result;
+}
+
+// 3
+
+public static List<String> top(String text, int n) {
+    String[] words = text.split(" ");
+    Map<String, Integer> counts = new HashMap<>();
+    List<String> order = new ArrayList<>();   // порядок первого появления
+
+    for (String w : words) {
+        if (w.isEmpty()) continue;
+
+        if (!counts.containsKey(w)) {
+            counts.put(w, 0);
+            order.add(w);
+        }
+        counts.put(w, counts.get(w) + 1);
+    }
+
+    List<String> keys = new ArrayList<>(order);
+    keys.sort((a, b) -> counts.get(b) - counts.get(a));
+
+    return keys.subList(0, Math.min(n, keys.size()));
+}
+
+// 4
+
+List<Integer> numbers = new ArrayList<>(List.of(4, 2, 7, 2, 9, 4, 1, 7, 3, 9));
+System.out.println("Исходный: " + numbers);
+
+
+List<Integer> unique = new ArrayList<>();
+List<Integer> freq = new ArrayList<>();
+
+
+// Перебор элементов массива и добавление либо в freq либо в unique
+for (Integer num : numbers) {
+int i = unique.indexOf(num);
+    if (i == -1) {
+        unique.add(num);
+        freq.add(1);
+    } else {
+            freq.set(i, freq.get(i) + 1);
+        }
+        }
+
+        System.out.println("Уникальные: " + unique);
+for (int i = 0; i < unique.size(); i++) {
+        System.out.println(unique.get(i) + " - " + freq.get(i) + " раз");
+        }
+
+        // Перебор массива
+        int min = numbers.get(0), max = numbers.get(0), sum = 0;
+for (int x : numbers) {
+        if (x < min) min = x;
+    if (x > max) max = x;
+sum += x;
+}
+        System.out.println("Минимум: " + min + ", максимум: " + max);
+System.out.println("Сумма: " + sum + ", среднее: " + (double) sum / numbers.size());
